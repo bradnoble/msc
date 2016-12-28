@@ -1,0 +1,20 @@
+{
+  "name": "msc",
+  "version": "1.0.0",
+  "description": "MSC membership and lodge usage app",
+  "main": "app.js",
+  "scripts": {},
+  "author": "Brad Noble",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "angular-cookies": "^1.5.8",
+    "body-parser": "^1.15.2",
+    "cfenv": "^1.0.3",
+    "cloudant": "^1.5.1",
+    "couchimport": "^0.5.1",
+    "express": "^4.14.0",
+    "http": "0.0.0",
+    "passport": "^0.3.2",
+    "passport-http": "^0.3.0"
+  }
+}

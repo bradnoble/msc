@@ -1,0 +1,141 @@
+<h1>Edit Household</h1>
+
+<form role="form" data-ng-submit="updateHousehold()" id="update-household" class="form form-horizontal">
+
+	<fieldset>
+
+		<legend>Household Info</legend>
+
+		<div class="form-group">
+			<label for="name" class="control-label col-sm-3">Label</label>
+			<div class="col-sm-9">
+				<input type="text" id="name" name="name" class="form-control" data-ng-model="household.name" placeholder="e.g., Noble, Randall/Hartman" data-ng-class="{empty: !household.name}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="street1" class="control-label col-sm-3">Street 1</label>
+			<div class="col-sm-9">
+				<input type="text" id="street1" name="street1" class="form-control" data-ng-model="household.street1" placeholder="e.g., 137 Schuss Pass" data-ng-class="{empty: !household.street1}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="street2" class="control-label col-sm-3">Street 2</label>
+			<div class="col-sm-9">
+				<input type="text" id="street2" name="street2" class="form-control" data-ng-model="household.street2" data-ng-class="{empty: !household.street2}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="city" class="control-label col-sm-3">City</label>
+			<div class="col-sm-9">
+				<input type="text" id="city" name="city" class="form-control" data-ng-model="household.city" placeholder="e.g., Waitsfield" data-ng-class="{empty: !household.city}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="state" class="control-label col-sm-3">State</label>
+			<div class="col-sm-9">
+				<input type="text" id="state" name="state" class="form-control" data-ng-model="household.state" placeholder="e.g., VT" data-ng-class="{empty: !household.state}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="zip" class="control-label col-sm-3">ZIP</label>
+			<div class="col-sm-9">
+				<input type="text" id="zip" name="zip" class="form-control" data-ng-model="household.zip" placeholder="e.g., 05673" data-ng-class="{empty: !household.zip}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="phone" class="control-label col-sm-3">Household phone</label>
+			<div class="col-sm-9">
+				<input type="text" id="phone" name="phone" class="form-control" data-ng-model="household.phone" placeholder="e.g., 802-496-8862" data-ng-class="{empty: !household.phone}" />
+				<span class="help-block">Probably a land line. (Each person can also have a phone #.)</span>
+			</div>
+		</div>
+
+		<hr />
+
+		<div class="form-group">
+			<label for="mail_news" class="control-label col-sm-3">Mail newsletter?</label>
+			<div class="col-sm-9">
+				<select class="form-control" data-ng-model="household.mail_news" data-ng-options="option as option for option in mail_news"></select>
+			</div>
+		</div>
+
+	</fieldset><!--household-->
+
+	<fieldset>
+		<legend>People</legend>
+		<p data-ng-show="household.people.length == 0">
+			This household is empty.
+		</p>
+		<ol class="people list-unstyled">
+			<li class="well" data-ng-repeat="person in household.people track by $index" data-ng-hide="person._deleted == true">
+
+				<div class="form-group">
+					<label for="person.first" class="control-label col-sm-3">First name</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control col-sm-4" data-ng-model="person.first" placeholder="E.g., Monk" data-ng-class="{empty: !person.first}" />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="person.last" class="control-label col-sm-3">Last name</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control col-sm-4" data-ng-model="person.last" placeholder="E.g., Bancroft" data-ng-class="{empty: !person.last}"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="person.email" class="control-label col-sm-3">Email</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" data-ng-model="person.email" placeholder="E.g., monkb@madriver.com" data-ng-class="{empty: !person.email}"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="person.phone" class="control-label col-sm-3">Mobile phone</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" data-ng-model="person.phone" placeholder="E.g., 123-456-7890" data-ng-class="{empty: !person.phone}"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="person.status" class="control-label col-sm-3">Status</label>
+					<div class="col-sm-9">
+						<select class="form-control" data-ng-model="person.status" data-ng-options="status as status for status in statuses"></select>
+					</div>
+				</div>
+				<div class="form-group" data-ng-show="person.status == 'child'">
+					<label for="person.dob" class="control-label col-sm-3">Date of birth</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" data-ng-model="person.dob" placeholder="Preferred format: mm/dd/yyyy" data-ng-class="{empty: !person.dob}" />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-9 col-sm-offset-3">
+						<a class="btn btn-default btn-danger" data-ng-click="removePerson($index)">Remove this person from the household</a>
+					</div>
+				</div>
+			</li>
+		</ol>
+	</fieldset>
+
+	<div class="col-sm-9 col-sm-offset-3">
+		<a class="btn btn-default" data-ng-click="addPerson(household._id)">Add person</a>
+		<button type="submit" data-ng-class="{disabled: household.people.length < 1}" class="btn btn-primary">Save household</button>
+	</div>
+</form>
+<p>
+	<a href="#/list">Return to list</a>
+</p>
+
+
+<!-- 
+<pre>
+	{{ household | json }}
+</pre>
+-->

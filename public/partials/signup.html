@@ -1,0 +1,154 @@
+<div class="page-header">
+  <h1 class="text-center">
+    <span data-ng-show="signup.name"><span class="text-success">{{ signup.name }}</span> | </span> 
+    {{ signup.arrive | date:'EEEE, MMM d' }} - {{ signup.depart | date:'EEEE, MMM d' }}
+  </h1>
+  <h2 class="subhead text-center">
+    <small>
+      <span data-ng-show="signup.chair.name">
+        Signup chair: <a href="#/list/{{signup.chair.household_id}}">{{ signup.chair.name }}</a>
+      </span>
+      <span data-ng-show="signup.mgr.name">
+        Lodge manager: <a href="#/list/{{signup.mgr.household_id}}">{{ signup.mgr.name }}</a>
+      </span>          
+    </small>
+  </h2>
+</div>
+
+
+<div class="row" data-ng-repeat="(date, rooms) in signup.assignments"  data-ng-show="signup.published">
+  <div class="col-sm-3">
+    <h3>{{ date | date:'EEEE, MMM d' }}</h3>
+  </div>
+  <div class="col-sm-9">
+
+    <ul class="list-group">
+      <li class="list-group-item" data-ng-class="{disabled: max[room].max - beds.length == 0}" data-ng-repeat="(room, beds) in rooms">
+        <div class="row">
+          <div class="col-sm-2 room">
+            {{ room }} 
+          </div>
+          <div class="col-sm-2 beds">
+            {{ max[room].max - beds.length}}/{{ max[room].max }} beds left
+          </div>
+          <div class="col-sm-8 people">
+              <span data-ng-show="beds.length === 0">
+                -
+              </span>
+            <span data-ng-repeat="person in beds track by $index">
+              <span ng-show="person.status != 'guest'">
+                <a href="#/list/{{person.household_id}}">{{ person.name }}</a>{{$last ? '' : ', '}}
+              </span>
+              <span ng-show="person.status == 'guest'">
+                {{ person.name }}, guest of <a href="#/list/{{person.member.household_id}}">{{ person.member.name }}</a> {{ person.member.status }}
+              </span>
+            </span>
+          </div>
+        </div><!--row-->
+      </li>
+    </ul>
+
+
+  </div>
+</div>
+
+
+
+    <!-- 
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th>
+              Room
+            </th>
+            <th>
+              Beds left
+            </th>
+            <th>
+              Assignments
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-ng-repeat="(room, beds) in rooms">
+            <th scope="row">
+              {{ room }}
+            </th>
+            <td>
+              {{ max[room].max - beds.length}} beds left
+            </td>
+            <td>  
+              <span data-ng-repeat="person in beds track by $index">
+                <span ng-show="person.status != 'guest'">
+                  <a href="#/list/{{person.household_id}}">{{ person.name }}</a>{{$last ? '' : ', '}}
+                </span>
+                <span ng-show="person.status == 'guest'">
+                  {{ person.name }}, guest of <a href="#/list/{{person.member.household_id}}">{{ person.member.name }}</a> {{ person.member.status }}
+                </span>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    <div class="table-responsive">
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th data-ng-repeat="(room, beds) in rooms">
+              {{ room }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-ng-repeat="(room, beds) in rooms">
+              <ol>
+                <li data-ng-repeat="person in beds track by $index">
+                  <span ng-show="person.status != 'guest'">
+                    <a href="#/list/{{person.household_id}}">{{ person.name }}</a>
+                  </span>
+                  <span ng-show="person.status == 'guest'">
+                    {{ person.name }}, guest of <a href="#/list/{{person.member.household_id}}">{{ person.member.name }}</a> {{ person.member.status }}
+                  </span>
+                </li>
+              </ol>
+            </td>              
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+-->
+
+<ol data-ng-show="!signup.published">
+  <li data-ng-repeat="person in signup.list">
+    <span ng-show="person.status != 'guest'">
+      <a href="#/list/{{person.household_id}}">{{ person.name }}</a>
+      ({{person.status}})
+    </span>
+    <span ng-show="person.status == 'guest'">
+      {{ person.name }}, guest of <a href="#/list/{{person.member.household_id}}">{{ person.member.name }}</a> {{ person.member.status }}
+    </span>
+  </li>
+</ol>
+
+
+
+<hr />
+<nav>
+  <ul class="pagination">
+    <li><a href="#/signups/"><span aria-hidden="true"><</span></a></li>
+    <li><a href="#/signups/{{ signup._id }}/edit"><span aria-hidden="true">Edit dates</span></a></li>
+    <li><a href="#/signups/{{ signup._id }}/edit/list"><span aria-hidden="true">Edit list</span></a></li>
+    <li><a href="#/signups/{{ signup._id }}/edit/assignments"><span aria-hidden="true">Edit assignments</span></a></li>
+  </ul>
+</nav>
+
+<!--
+<pre>
+  {{ signup | json }}
+</pre>
+-->
+

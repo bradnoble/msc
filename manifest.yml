@@ -1,0 +1,17 @@
+---
+declared-services:
+  msc-cloudant:
+    label: cloudantNoSQLDB
+    plan: Lite
+applications:
+- name: msc
+  path: .
+  instances: 1
+  disk_quota: 512M
+  memory: 256M
+  host: msc
+  domain: mybluemix.net
+  random-route: true
+  command: node app.js
+  services:
+  - msc-cloudant

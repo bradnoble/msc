@@ -1,0 +1,36 @@
+<h1>
+  {{ household.name }}
+  <small><a href="#/list/edit/{{ household._id }}">edit</a></small>
+</h1>
+
+<div class="row">
+
+  <div class="col-md-4">
+    <div data-ng-show="household.street1">
+      {{ household.street1 }}
+    </div>
+    <div data-ng-show="household.street2">
+      {{ household.street2 }}
+    </div>
+    <div data-ng-show="household.city && household.state">
+      <span data-ng-show="household.city">{{ household.city }}</span><span data-ng-show="household.state">, {{ household.state }}</span>   <span data-ng-show="household.zip">{{ household.zip }}</span>
+    </div>
+    <div data-ng-show="household.phone">
+      Phone: {{ household.phone }} (home)
+    </div>
+  </div>
+
+  <div class="col-sm-8">
+    <ul data-ng-show="household.people.length" class="list-unstyled people">
+      <li data-ng-repeat="person in household.people">
+        <strong>{{ person.first }} {{ person.last}}</strong> 
+        <span>, {{ person.status }}</span>
+        <span data-ng-show="person.email">, {{ person.email }}</span><span data-ng-show="person.phone">, {{ person.phone }}</span><span data-ng-show="person.dob">, DOB: {{ person.dob | date:'longDate' }}</span>
+      </li>
+    </ul>
+  </div>
+</div>
+<hr />
+<p>
+	<a href="#/list">Return to list</a>
+</p>

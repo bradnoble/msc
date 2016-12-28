@@ -1,0 +1,42 @@
+<div class="page-header">
+	<h1>
+		Signups
+		<small>
+			<a href="#/signups/new">New</a>
+		</small>
+	</h1>
+</div>
+
+	<ul class="list-group">
+		<li data-ng-repeat="signup in signups" class="list-group-item">
+
+			<div class="row">
+
+						<div class="col-md-3">
+                <strong><a href="#/signups/{{ signup._id }}"><span class="date">{{ signup.arrive | date:'EEE, MMM d' }}</span><span class="hyphen"> - </span><span class="date">{{ signup.depart | date:'d' }}</span></a></strong> 
+								<!-- <a href="#/signups/edit/{{ signup._id }}">edit</a> -->
+						</div>
+
+						<div class="col-md-3">
+              <div ng-show="signup.name">
+                {{ signup.name }}
+              </div>
+            </div>
+
+						<div class="col-md-4">
+					    <div data-ng-show="signup.chair.name">
+                Signup chair: <a href="#/list/{{signup.chair.household_id}}">{{ signup.chair.name }}</a>
+              </div>
+					    <div data-ng-show="signup.mgr.name">
+                Lodge manager: <a href="#/list/{{signup.mgr.household_id}}">{{ signup.mgr.name }}</a>
+              </div>
+						</div>
+
+            <div class="col-md-2">
+                {{ signup.list.length }} signed up 
+								<!-- <a href="#/signups/edit/list/{{ signup._id }}">edit</a> -->
+            </div>
+					</div>
+
+		</li>
+	</ul>

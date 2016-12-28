@@ -1,0 +1,110 @@
+<div class="page-header">
+	<h1>
+		Edit Signup
+	</h1>
+  <div data-ng-show="signup._rev">
+    <h2 class="subhead"> 
+      <span data-ng-show="signup.name">{{ signup.name }} | </span> {{ signup.arrive | date:'EEEE, MMM d' }} - {{ signup.depart | date:'EEEE, MMM d' }}
+    </h2>
+    <nav>
+      <ul class="pagination">
+        <li class="active"><a href="#/signups/{{ signup._id }}/edit"><span aria-hidden="true">Edit dates</span></a></li>
+        <li><a href="#/signups/{{ signup._id }}/edit/list"><span aria-hidden="true">Edit list</span></a></li>
+        <li><a href="#/signups/{{ signup._id }}/edit/assignments"><span aria-hidden="true">Edit assignments</span></a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<div class="form-horizontal">
+
+  <div ng-controller="DatepickerPopupDemoCtrl">
+    <div class="form-group">
+      <label for="signup-arrive" class="col-sm-3 control-label">Arrive</label>
+      <div class="col-sm-9">
+        <p class="form-control-static">
+          {{ $parent.signup.arrive | date:'EEEE, MMMM d' }} <button type="button" class="link" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+        </p>
+        <p class="input-group">
+          <input type="text" class="form-control hidden" uib-datepicker-popup="{{format}}" ng-model="$parent.signup.arrive" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-format="altInputFormats" />
+          <span class="input-group-btn hidden">
+            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+      </div>
+    </div><!-- form-group -->
+    <div class="form-group">
+      <label for="signup-depart" class="col-sm-3 control-label">Depart</label>
+      <div class="col-sm-9">
+        <p class="form-control-static">
+          {{ $parent.signup.depart | date:'EEEE, MMMM d' }} <button type="button" class="link" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+        </p>
+
+        <p class="input-group">
+          <input type="text" class="form-control hidden" uib-datepicker-popup="{{format}}" ng-model="$parent.signup.depart" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-format="altInputFormats" />
+          <span class="input-group-btn hidden">
+            <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+      </div>
+    </div><!-- form-group -->
+  </div>
+
+  <div class="form-group">
+    <label for="signup-name" class="col-sm-3 control-label">Event name</label>
+    <div class="col-sm-9">
+      <input type="text" id="signup-name" class="form-control" data-ng-model="signup.name" placeholder="e.g., Jr Weekend, MLK" />
+    </div>
+  </div><!-- form-group -->
+
+  <hr />
+
+  <div class="form-group">
+    <label for="signup-chair" class="col-sm-3 control-label">Signup chair</label>
+    <div class="col-sm-9">
+      <p class="form-control-static">
+        <a href="#/list/{{ signup.chair.household_id }}">{{ signup.chair.name }}</a>
+      </p>
+  		<div class="member-list" data-ng-controller="chair" members></div>
+    </div>
+  </div><!-- form-group -->
+
+  <hr />
+
+  <div class="form-group">
+    <label for="signup-chair" class="col-sm-3 control-label">Lodge manager</label>
+    <div class="col-sm-9">
+      <p class="form-control-static">
+        <a href="#/list/{{ signup.mgr.household_id }}">{{ signup.mgr.name }}</a>
+      </p>
+  		<div class="member-list" data-ng-controller="mgr" members></div>
+    </div>
+  </div><!-- form-group -->
+
+</div><!-- form-horizontal -->
+
+<hr />
+
+<div class="col-sm-9 col-sm-offset-3">
+  <form role="form" id="update-signup" data-ng-submit="updateSignup()">
+    <input type="hidden" data-ng-model="signup" value="{{ signup }}" />
+    <button class="btn btn-primary btn-block btn-lg">Save</button>
+  </form>
+</div>
+
+
+
+
+<!-- 
+<pre>
+  {{ signup | json }}
+</pre>
+
+      <h4>Asynchronous results</h4>
+    <pre>Model: {{asyncSelected | json}}</pre>
+    <input type="text" ng-model="asyncSelected" placeholder="Locations loaded via $http" uib-typeahead="address for address in getLocation($viewValue)" typeahead-loading="loadingLocations" typeahead-no-results="noResults" class="form-control">
+    <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+    <div ng-show="noResults">
+      <i class="glyphicon glyphicon-remove"></i> No Results Found
+    </div>
+-->

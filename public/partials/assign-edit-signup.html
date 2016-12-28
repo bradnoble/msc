@@ -1,0 +1,103 @@
+<div class="page-header">
+	<h1>
+		Edit Signup
+	</h1>
+  <h2 class="subhead"> 
+    <span data-ng-show="signup.name">{{ signup.name }} | </span> {{ signup.arrive | date:'EEEE, MMM d' }} - {{ signup.depart | date:'EEEE, MMM d' }}
+  </h2>
+  <nav>
+    <ul class="pagination">
+      <li><a href="#/signups/{{ signup._id }}/edit"><span aria-hidden="true">Edit dates</span></a></li>
+      <li><a href="#/signups/{{ signup._id }}/edit/list"><span aria-hidden="true">Edit list</span></a></li>
+      <li class="active"><a href="#/signups/{{ signup._id }}/edit/assignments"><span aria-hidden="true">Edit assignments</span></a></li>
+    </ul>
+  </nav>
+</div>
+
+<div cookie></div>
+
+<div class="row" data-ng-show="getCookie() == signup.chair._id">
+	<div class="col-sm-2">
+    <h3>Signups</h3>
+    <p>Click a name to get started.</p>
+    <ol class="signup-list">
+      <li data-ng-repeat="person in signup.list">
+        <span class="btn btn-default btn-xs" title="{{person.note}}" data-ng-click="select(person)" data-ng-class="{assigned: assigned[person._id], active: person._id == selected._id}">
+          <span ng-show="person.status != 'guest'">
+            {{ person.name }}
+          </span>
+          <span ng-show="person.status == 'guest'">
+            {{ person.name }}, guest of {{ person.member.name }}
+          </span>
+          <span data-ng-show="person.note">*</span>
+        </span>
+      </li>
+    </ol>
+    <p>* assigned</p>
+	</div>
+  <div class="col-sm-10">
+    <h3>Assignments</h3>
+    <div class="panel panel-default" data-ng-repeat="(date, rooms) in signup.assignments">
+      <div class="panel-heading">{{ date | date:'EEEE, MMM d' }}</div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-condensed">
+            <thead>
+              <tr>
+                <th data-ng-repeat="(room, beds) in rooms">
+                  {{ room }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-ng-repeat="(room, beds) in rooms">
+                  <p>
+                    {{max[room].max - beds.length}} beds left
+                    </p>
+                  <ol>
+                    <li data-ng-repeat="person in beds track by $index">
+                      <span ng-show="person.status != 'guest'">
+                        <a href="#/list/{{ person.household_id }}">{{ person.name }}</a>
+                      </span>
+                      <span ng-show="person.status == 'guest'">
+                        {{ person.name }}, guest of <a href="#/list/{{ person.member.household_id }}">{{ person.member.name }}</a>
+                      </span>
+                      <a class="btn btn-xs btn-default" data-ng-click="removeBedAssignment({date:date,room:room,index:$index})">remove</a>
+                    </li>
+                    <li data-ng-show="selected._id && beds.length < max[room].max">
+                      <a class="btn btn-xs btn-primary" data-ng-click="addToBed({date:date,room:room})">add</a> 
+                    </li>
+                  </ol>
+                </td>              
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <p>
+        Are these assignments ready to be published to the public sign up page?
+      </p>
+      <div class="btn-group">
+        <label class="btn btn-default" ng-model="signup.published" uib-btn-radio="true" uncheckable>Published</label>
+        <label class="btn btn-default" ng-model="signup.published" uib-btn-radio="false" uncheckable>Hidden</label>
+      </div>
+    </div>
+
+    <form role="form" id="update-signup" data-ng-submit="updateSignup()">
+      <input type="hidden" data-ng-model="signup" value="{{ signup }}" />
+      <button class="btn btn-primary btn-block btn-lg">Save</button>
+    </form>
+  </div>
+</div>
+
+
+
+<!--
+<pre>
+  {{ signup | json }}
+</pre>
+-->

@@ -1,0 +1,16 @@
+<form data-ng-submit="pick()">
+  <input class="form-control" ng-model="searchText" placeholder="Search for members by name..." />
+  <ul data-ng-show="searchText" class="list-group">
+    <li data-ng-repeat="person in results | filter:searchText as filtered track by $index" class="list-group-item">
+      <a data-ng-show="type != 'search'" data-ng-click="assign(person)">
+        {{ person.name }} 
+<!--
+          <span data-ng-show="$index == 0"> (hit return to choose)</span>
+-->
+      </a>
+      <a data-ng-show="type == 'search'" href="#/list/{{person.household_id}}" title="click for contact info">
+        {{ person.name }} ({{person.status}})
+      </a>
+    </li>
+  </ul>
+</form>

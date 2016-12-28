@@ -1,0 +1,107 @@
+<div class="page-header">
+	<h1>
+		Membership List
+		<small><a href="#/list/new">New</a></small>
+	</h1>
+</div>
+
+
+  <div class="form-group">
+		<div class="member-list" data-ng-controller="search" members></div>
+  </div><!-- form-group -->
+
+
+
+
+	<ul class="list-group">
+		<li data-ng-repeat="household in households" class="list-group-item household">
+			<div class="row">
+
+				<div class="col-sm-4">
+					<div class="row">
+
+						<div class="col-md-4">
+							<a href="#/list/{{ household._id }}">{{ household.name }}</a><br />
+							<a href="#/list/edit/{{ household._id }}" class="btn btn-xs btn-default">edit</a>
+						</div>
+
+						<div class="col-md-8">
+					    <div data-ng-show="household.street1">
+					      {{ household.street1 }}
+					    </div>
+					    <div data-ng-show="household.street2">
+					      {{ household.street2 }}
+					    </div>
+					    <div data-ng-show="household.city && household.state">
+					      <span data-ng-show="household.city">{{ household.city }}</span><span data-ng-show="household.state">, {{ household.state }}</span>   <span data-ng-show="household.zip">{{ household.zip }}</span>
+					    </div>
+					    <div data-ng-show="household.phone">
+					      Phone: {{ household.phone }} (home)
+					    </div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-8">
+					<ul data-ng-show="household.people.length" class="list-unstyled people">
+						<li data-ng-repeat="person in household.people">
+							<strong>{{ person.first }} {{ person.last}}</strong> 
+							<span>, {{ person.status }}</span>
+							<span data-ng-show="person.email">, {{ person.email }}</span><span data-ng-show="person.phone">, {{ person.phone }}</span><span data-ng-show="person.dob">, DOB: {{ person.dob | date:'longDate' }}</span>
+						</li>
+					</ul>
+				</div>
+
+			</div><!--row-->
+		</li>
+	</ul>
+
+
+
+
+<!--
+	<table>
+		<thead>
+			<th>
+				Household
+			</th>
+			<th>
+				Address
+			</th>
+			<th>
+				Home phone
+			</th>
+			<th>
+				People
+			</th>
+		</thead>
+		<tr data-ng-repeat="household in households">
+			<td>
+				<a href="#/list/edit/{{ household._id }}">{{ household.name }}</a>
+			</td>
+			<td>
+				<div data-ng-show="household.street1">
+					{{ household.street1 }}
+				</div>
+				<div data-ng-show="household.street2">
+					{{ household.street2 }}
+				</div>
+				<div data-ng-show="household.city && household.state">
+					<span data-ng-show="household.city">{{ household.city }}</span><span data-ng-show="household.state">, {{ household.state }}</span>   <span data-ng-show="household.zip">{{ household.zip }}</span>
+				</div>
+			</td>
+			<td>
+				<div data-ng-show="household.phone">
+					{{ household.phone }}
+				</div>
+			</td>
+			<td>
+				<ul data-ng-show="household.people.length" class="list-unstyled people">
+					<li data-ng-repeat="person in household.people">
+						<strong>{{ person.first }} {{ person.last}}</strong> <span class="label label-subtle">({{ person.status }})</span> <span data-ng-show="person.email"> | {{ person.email }}</span><span data-ng-show="person.phone"> | {{ person.phone }}</span><span data-ng-show="person.dob"> | DOB: {{ person.dob | date:'longDate' }}</span>
+					</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+-->

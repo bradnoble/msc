@@ -1,0 +1,108 @@
+<div class="page-header">
+	<h1>
+		Edit Signup
+	</h1>
+  <h2 class="subhead"> 
+    <span data-ng-show="signup.name">{{ signup.name }} | </span> {{ signup.arrive | date:'EEEE, MMM d' }} - {{ signup.depart | date:'EEEE, MMM d' }}
+  </h2>
+  <nav>
+    <ul class="pagination">
+      <li><a class="disabled" href="#/signups/{{ signup._id }}/edit"><span aria-hidden="true">Edit dates</span></a></li>
+      <li class="active"><a href="#/signups/{{ signup._id }}/edit/list"><span aria-hidden="true">Edit list</span></a></li>
+      <li><a href="#/signups/{{ signup._id }}/edit/assignments"><span aria-hidden="true">Edit assignments</span></a></li>
+    </ul>
+  </nav>
+</div>
+
+
+<div cookie></div>
+
+<div data-ng-show="getCookie() == signup.chair._id">
+  <div class="row">
+    <div class="col-sm-3">
+          <strong>Add a Member</strong>
+        <div class="member-list" data-ng-controller="signup-list-member" members></div>
+      <hr />
+
+      <form data-ng-submit="startGuest()" data-ng-show="signup.list.length > 0">
+        Add a guest
+        <input type="text" class="form-control" data-ng-model="guestStarter" placeholder="Type a guest's name...'" />
+      </form>
+      <p data-ng-show="signup.guest">
+        Who is {{ signup.guest.name }} a guest of?
+      </p>
+
+      <hr />
+      <div data-ng-show="signup.chair.name">
+        Signup chair: <a href="#/list/{{signup.chair.household_id}}">{{ signup.chair.name }}</a>
+      </div>
+      <div data-ng-show="signup.mgr.name">
+        Lodge manager: <a href="#/list/{{signup.mgr.household_id}}">{{ signup.mgr.name }}</a>
+      </div>
+    </div>
+
+    <div class="col-sm-9">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+            Sign up list
+        </div>
+        <div class="panel-body">
+          <p data-ng-show="signup.guest">
+            Add {{ signup.guest.name }} to a member.
+          </p>
+          <p data-ng-show="signup.list.length == 0">
+            The signup chair hasn't added anyone yet. 
+          </p>
+          <table class="table table-condensed">
+            <thead>
+              <tr>
+                <th>
+                  &nbsp;
+                </th>
+                <th>
+                  Name
+                </th>
+                <th>
+                  Notes
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-ng-repeat="person in signup.list track by $index">
+                <td>
+                  {{ $index + 1 }} <a class="btn btn-xs btn-default" data-ng-click="moveUp(person, $index)">^</a>
+                </td>
+                <td>
+                  <div ng-show="person.status != 'guest'">
+                    <a href="#/list/{{ person.household_id }}">{{ person.name }}</a>
+                    ({{person.status}})
+                    <button data-ng-show="signup.guest" data-ng-click="addGuest(person)">Add</button>
+                  </div>
+                  <div ng-show="person.status == 'guest'">
+                    {{ person.name }}, guest of <a href="#/list/{{ person.member.household_id }}">{{ person.member.name }}</a> ({{person.member.status}})
+                  </div>
+                </td>
+                <td>
+                  <input class="form-control" data-ng-model="person.note" type="text" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel-footer">
+          <form role="form" id="update-signup" data-ng-submit="updateSignup()">
+            <input type="hidden" data-ng-model="signup" value="{{ signup }}" />
+            <button class="btn btn-primary">Save</button>
+            <a href="#/signups/{{ signup._id }}" class="btn btn-link">Cancel and return to sign up</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div><!--conditional if the right signup chair -->
+</div>
+
+<!--
+<pre>
+  {{ signup | json }}
+</pre>  
+-->
