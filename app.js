@@ -3,6 +3,7 @@ var cfenv = require("cfenv"),
   express = require('express'),
   bodyParser = require('body-parser'),
   jsonParser = bodyParser.json(),
+  json2csv = require('json2csv'),
   opts = appEnv.services.cloudantNoSQLDB[0].credentials
   // opts = { url: 'http://bradnoble:cl0udant@127.0.0.1:5984' }
   ;
@@ -29,41 +30,126 @@ passport.use(users.passportStrategy());
 
 app.use(express.static(__dirname + '/public'));
 
-app.get('/getHouseholdsAndPeople', function(req, res){
-  //db.view(designname, viewname, [params], [callback])
-  db.view('app', 'householdsAndPeople', {'include_docs': true}, function(err, resp){
-    if (!err) {
-      var mapped = function(data){
-        return data.rows.map(function(row) {
-          return row.doc; // this is the entire payload
-        });
-      };
-      // add people to the household
-      var docs = mapped(resp);
-      var households = [];
-      var people = {};
-      for (i = 0; i < docs.length; i++) { 
-        if(docs[i].type == 'person'){
-          // build an object that holds objects that hold arrays of people
-          if(!people[docs[i].household_id]){
-            people[docs[i].household_id] = [];
+app.get('/getHouseholdsAndPeople', 
+  users.auth,
+  function(req, res){
+    //db.view(designname, viewname, [params], [callback])
+    db.view('app', 'householdsAndPeople', {'include_docs': true}, function(err, resp){
+      if (!err) {
+        var mapped = function(data){
+          return data.rows.map(function(row) {
+            return row.doc; // this is the entire payload
+          });
+        };
+        // add people to the household
+        var docs = mapped(resp);
+        var households = [];
+        var people = {};
+        for (i = 0; i < docs.length; i++) { 
+          if(docs[i].type == 'person'){
+            // build an object that holds objects that hold arrays of people
+            if(!people[docs[i].household_id]){
+              people[docs[i].household_id] = [];
+            }
+            people[docs[i].household_id].push(docs[i]);
+          } else if (docs[i].type == 'household') {
+            households[i] = docs[i];
           }
-          people[docs[i].household_id].push(docs[i]);
-        } else if (docs[i].type == 'household') {
-          households[i] = docs[i];
+          // console.log(people);
         }
-        // console.log(people);
+        for (i = 0; i < households.length; i++) { 
+          var household_id = households[i]._id;
+          households[i].people = [];
+          households[i].people = people[household_id];
+        }
+        // console.log(docs[1]);
+        res.send(households);
       }
-      for (i = 0; i < households.length; i++) { 
-        var household_id = households[i]._id;
-        households[i].people = [];
-        households[i].people = people[household_id];
-      }
-      // console.log(docs[1]);
-      res.send(households);
-    }
-  });
-});
+    });
+  }
+);
+
+app.get('/getPeopleForCSV', 
+  function(req, res){
+
+      db.view('app', 'householdsAndPeople', {'include_docs': true}, function(err, resp){
+        if(!err){
+
+          var households = {};
+          var people = [];
+          var rows = [];
+          var z = 0;
+          var people_fields = [];
+          var household_fields = [];
+          var whitelist = ['_id', '_rev', 'type'];
+
+
+
+          var mapped = function(data){
+            return data.rows.map(function(row) {
+              if(row.doc.type == 'household'){
+                households[row.doc._id] = row.doc;
+/*
+                if(household_fields.length == 0 && row.doc.street1){
+                  household_fields = Object.keys(row.doc);
+                  console.log(household_fields);
+                }
+*/
+              }
+              if(row.doc.type == 'person'){
+                people[z] = row.doc;
+                if(people_fields.length == 0 && row.doc.household_id){
+                  people_fields = Object.keys(row.doc);
+                  // console.log(people_fields);
+                }
+                z++;              
+              }
+              return row.doc; 
+            });
+          };
+
+
+
+/*
+var keys = [];
+for(var k in obj) keys.push(k);
+*/
+
+        var data = mapped(resp);
+/*
+        var people_fields = [ 'last','first','status','household_id','phone','email','work_phone','dob','gender','type'];
+        var household_fields = ['name', 'label_name', 'street1', 'street2', 'city', 'state', 'zip','mail_list', 'mail_news'];
+*/
+        var household_fields = ['name', 'label_name', 'street1', 'street2', 'city', 'state', 'zip','mail_list', 'mail_news'];
+
+        var fields = people_fields.concat(household_fields);
+
+          // associate the households to the person
+          for (i = 0; i < people.length; i++) { 
+            rows[i] = people[i];
+            var household = households[people[i].household_id];
+            if(household){
+              for(j in household_fields){
+                rows[i][household_fields[j]] = household[household_fields[j]];
+              }
+            }
+          }
+
+          console.log(fields);
+//          console.log(rows);
+
+          // http://stackoverflow.com/questions/35138765/download-csv-file-node-js/35140031
+          json2csv({ data: rows, fields: fields }, function(err, csv) {
+            res.set('Content-disposition', 'attachment; filename=people.csv');
+            res.set('Content-Type', 'text/csv');
+            res.status(200).send(csv);
+          });
+        } else {
+          console.log(err);
+        }
+      });
+  }
+);
 
 app.get('/getHousehold/', 
   users.auth,
@@ -220,16 +306,17 @@ app.get('/getPeople',
             return trimmed; 
           });
         };
+
         var people = mapped(resp);
         if (!err) {
-//          console.log(people);
           res.send(people);
         }
         else {
           console.log(err);
         }
       });
-});
+  }
+);
 
 app.post('/update', jsonParser, function(req, res){
   var doc = req.body;
@@ -242,6 +329,13 @@ app.post('/update', jsonParser, function(req, res){
     }
   });
 });
+
+
+
+
+
+
+
 
 /*
 TESTS
