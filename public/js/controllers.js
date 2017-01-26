@@ -1,18 +1,15 @@
 /* to do
-export to CSV
-  households
-  people
 list 
-  search by name, link to household page
-  exports
-restrict list to only members
+  x search by name, link to household page
+  export to CSV
+    households
+    people
+x restrict list to only members
 cancel someone without deleting them from list
   create cancel object to store this info
   restore from cancelled
 D signups
 D households
-upload new info from MSC list from old site
-get on bluemix
 get membership list download
   get emails, excluding non-member
 don't save dates til signup chair is in
@@ -20,11 +17,14 @@ toggle to show notes per name on assign
 keep the dob for junior, too
   if wrong, email montclairskiclub@gmail.com to update it
 change dob to dob.month and dob.year
-update the data from msc.com
 
 // working
 
 // done
+x upload new info from MSC list from old site
+x get on bluemix
+x update the data from msc.com
+x uninstall couchimport if jsonToCSV works
 x creating signup generates password for signup admin privs
     needs to be retrievable somehow
     make the signup chair's unique id the password for the signup
@@ -193,8 +193,7 @@ app.controller('signup', function ($scope, $cookies, $location, $rootScope, $rou
     $scope.signup.depart = new Date();
     $scope.signup.list = [];
     $scope.signup.published = false;
-  }
-  else {
+  } else {
     simpleFactory.getEditSignup($routeParams.id)
       .success(function(data){
         $scope.signup = data;
@@ -210,11 +209,45 @@ app.controller('signup', function ($scope, $cookies, $location, $rootScope, $rou
   };
 
   $scope.moveUp = function(person, index){
+    // make sure the person being moved doesn't move off the top of the list
     if(index > 0){
+      // temporarily store the person being replaced
       var temp = $scope.signup.list[index - 1];
+      // put the person being moved into her new spot, up one from where she started
       $scope.signup.list[index - 1] = person;
+      // put the person being replaced in the person being moved's empty spot
       $scope.signup.list[index] = temp;
     }    
+  };
+
+  $scope.moveDown = function(person, index){
+    // make sure the person doesn't move off the bottom of the list
+    if(index < $scope.signup.list.length - 1){
+      var temp = $scope.signup.list[index + 1];
+      $scope.signup.list[index + 1] = person;
+      $scope.signup.list[index] = temp;
+    }    
+  };
+
+  $scope.cancel = function(person){
+    var here = false;
+    // create cancellations if they don't exists
+    if(!$scope.signup.cancelled){
+      $scope.signup.cancelled = [];
+    }
+    // add person to cancelled
+    angular.forEach($scope.signup.cancelled, function(value, key){
+      value._id
+      $scope.signup.cancelled.push(person);
+    });
+    // remove person from list
+    angular.forEach($scope.signup.list, function(value, key){
+      // if value._id == person._id, splice it
+      if(value._id == person._id){
+        $scope.signup.list.splice(key, 1);
+      }
+    });
+    // save
   };
 
   $scope.startGuest = function(){
@@ -252,6 +285,30 @@ app.controller('signup', function ($scope, $cookies, $location, $rootScope, $rou
       }
     });
     // console.log($scope.assigned);
+  };
+
+  $scope.filterList = function(){
+    console.log('hi');
+    if($scope.listFilter){
+      $scope.listFilter = '';
+    } else {
+      $scope.listFilter = "btn-link";
+    }
+  };
+
+  $scope.applyToDuration = function(obj){
+    // get dates from span
+    var dates = simpleFactory.getAllDays($scope.signup.arrive, $scope.signup.depart);
+    // get room from param
+    var room = obj.room;
+    // get person from $scope.selected
+    // var person = $scope.selected;
+    // loop through dates and assign person to room
+    angular.forEach(dates, function(value, key){
+      // addToBed({date:date,room:room})
+      // console.log(key, room)
+      $scope.addToBed({date:key, room:room});
+    });
   };
 
   $scope.addToBed = function(obj){
@@ -393,6 +450,36 @@ app.controller('memberCtrl', function ($scope, $rootScope, $location, simpleFact
 
 
 /* ui-bootstrap stuff */
+
+app.controller('navCtrl', function($scope, $location, $routeParams){
+  var path = $location.url();
+  $scope.nav = [
+    {
+      "label": "Montclair Ski Club",
+      "url": "/"
+    },
+    {
+      "label": "list",
+      "url": "list"          
+    },
+    {
+      "label": "signups",
+      "url": "signups"          
+    },
+    {
+      "label": "docs",
+      "url": "docs"          
+    }
+  ];
+/*
+  angular.forEach($scope.nav, function(value, key){
+    var path = $location.path();
+    if(path.indexOf(value.url) > -1){
+      $scope.nav[key].active = true;
+    }
+  });
+*/
+});
 
 app.controller('dateCtrl', function ($scope) {
   $scope.open = function($event) {

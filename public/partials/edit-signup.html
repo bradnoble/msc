@@ -1,20 +1,9 @@
-<div class="page-header">
-	<h1>
-		Edit Signup
-	</h1>
-  <div data-ng-show="signup._rev">
-    <h2 class="subhead"> 
-      <span data-ng-show="signup.name">{{ signup.name }} | </span> {{ signup.arrive | date:'EEEE, MMM d' }} - {{ signup.depart | date:'EEEE, MMM d' }}
-    </h2>
-    <nav>
-      <ul class="pagination">
-        <li class="active"><a href="#/signups/{{ signup._id }}/edit"><span aria-hidden="true">Edit dates</span></a></li>
-        <li><a href="#/signups/{{ signup._id }}/edit/list"><span aria-hidden="true">Edit list</span></a></li>
-        <li><a href="#/signups/{{ signup._id }}/edit/assignments"><span aria-hidden="true">Edit assignments</span></a></li>
-      </ul>
-    </nav>
-  </div>
-</div>
+<ol class="breadcrumb">
+  <li><a href="#/signups/">Signups</a></li>
+  <li>
+    Edit signup
+  </li>
+</ol>
 
 <div class="form-horizontal">
 

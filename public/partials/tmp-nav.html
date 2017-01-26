@@ -1,0 +1,11 @@
+<ul class="nav navbar-nav">
+  <li data-ng-repeat="item in nav">
+    <a href="#/{{item.url}}" data-ng-class="{active: item.active}">{{item.label}}</a>
+  </li>
+</ul>
+
+<!--
+<pre>
+  {{ nav | json }}
+</pre>
+-->

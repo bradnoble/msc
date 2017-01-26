@@ -1,3 +1,13 @@
+app.directive('primaryNav', function($timeout){
+  return {
+    controller: 'navCtrl',
+    templateUrl: 'partials/tmp-nav.html',
+    link: function($scope, element, attrs){
+//      console.log($scope.type);
+    }
+  };
+});
+
 app.filter('reverseArrayOnly', function() {
   return function(items) {
     if(!angular.isArray(items)) { return items; }

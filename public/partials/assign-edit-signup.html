@@ -1,99 +1,118 @@
-<div class="page-header">
-	<h1>
-		Edit Signup
-	</h1>
-  <h2 class="subhead"> 
-    <span data-ng-show="signup.name">{{ signup.name }} | </span> {{ signup.arrive | date:'EEEE, MMM d' }} - {{ signup.depart | date:'EEEE, MMM d' }}
-  </h2>
-  <nav>
-    <ul class="pagination">
-      <li><a href="#/signups/{{ signup._id }}/edit"><span aria-hidden="true">Edit dates</span></a></li>
-      <li><a href="#/signups/{{ signup._id }}/edit/list"><span aria-hidden="true">Edit list</span></a></li>
-      <li class="active"><a href="#/signups/{{ signup._id }}/edit/assignments"><span aria-hidden="true">Edit assignments</span></a></li>
-    </ul>
-  </nav>
-</div>
+<ol class="breadcrumb">
+  <li><a href="#/signups/">Signups</a></li>
+  <li><a href="#/signups/{{ signup._id }}"><span data-ng-show="signup.name">{{ signup.name }}, </span> {{ signup.arrive | date:'EEEE, MMM d' }} - {{ signup.depart | date:'EEEE, MMM d' }}</a></li>
+  <li>Edit Assignments</li>
+</ol>
 
 <div cookie></div>
 
-<div class="row" data-ng-show="getCookie() == signup.chair._id">
-	<div class="col-sm-2">
-    <h3>Signups</h3>
-    <p>Click a name to get started.</p>
-    <ol class="signup-list">
-      <li data-ng-repeat="person in signup.list">
-        <span class="btn btn-default btn-xs" title="{{person.note}}" data-ng-click="select(person)" data-ng-class="{assigned: assigned[person._id], active: person._id == selected._id}">
+<div data-ng-show="getCookie() == signup.chair._id">
+  <div class="row">
+    <div class="col-sm-3">
+      <h2>
+        Signup list
+      </h2>
+
+      <!-- 
+      <pre>
+        {{ selected | json }}
+      </pre>
+      -->
+
+      <p>
+        <strong>Step 1</strong>: Pick a name
+      </p>
+      <div class="list-group">
+        <button type="button" class="list-group-item" data-ng-repeat="person in signup.list" data-ng-class="{ active: person._id == selected._id, 'disabled': assigned[person._id] }" data-ng-click="select(person)">
           <span ng-show="person.status != 'guest'">
-            {{ person.name }}
+            <strong>{{ person.name }}</strong> {{ person.gender }} <span data-ng-show="person.status != 'active'">({{ person.status }})</span>
           </span>
           <span ng-show="person.status == 'guest'">
             {{ person.name }}, guest of {{ person.member.name }}
           </span>
-          <span data-ng-show="person.note">*</span>
-        </span>
-      </li>
-    </ol>
-    <p>* assigned</p>
-	</div>
-  <div class="col-sm-10">
-    <h3>Assignments</h3>
-    <div class="panel panel-default" data-ng-repeat="(date, rooms) in signup.assignments">
-      <div class="panel-heading">{{ date | date:'EEEE, MMM d' }}</div>
-      <div class="panel-body">
-        <div class="table-responsive">
-          <table class="table table-condensed">
-            <thead>
-              <tr>
-                <th data-ng-repeat="(room, beds) in rooms">
-                  {{ room }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-ng-repeat="(room, beds) in rooms">
-                  <p>
-                    {{max[room].max - beds.length}} beds left
-                    </p>
-                  <ol>
-                    <li data-ng-repeat="person in beds track by $index">
-                      <span ng-show="person.status != 'guest'">
-                        <a href="#/list/{{ person.household_id }}">{{ person.name }}</a>
-                      </span>
-                      <span ng-show="person.status == 'guest'">
-                        {{ person.name }}, guest of <a href="#/list/{{ person.member.household_id }}">{{ person.member.name }}</a>
-                      </span>
-                      <a class="btn btn-xs btn-default" data-ng-click="removeBedAssignment({date:date,room:room,index:$index})">remove</a>
-                    </li>
-                    <li data-ng-show="selected._id && beds.length < max[room].max">
-                      <a class="btn btn-xs btn-primary" data-ng-click="addToBed({date:date,room:room})">add</a> 
+          <span data-ng-show="person.note">
+            {{ person.note }}
+          </span>
+        </button>
+      </div>
+    </div><!-- col -->
+
+    <div class="col-sm-9">
+      <h2>
+        Bed assignments
+      </h2>
+      <p>
+        <strong>Step 2</strong>: Assign to beds 
+        <!-- <button class="btn btn-xs" data-ng-class="{'disabled': assigned == {}, 'btn-danger': assigned != {}}">Clear assignments</button>-->
+      </p>
+
+      <section class="day" data-ng-repeat="(date, rooms) in signup.assignments">
+        <h3>
+          {{ date | date:'EEEE, MMM d' }}
+        </h3>
+        <div class="panel panel-default">
+          <ul class="list-group">
+            <li class="list-group-item" data-ng-class="{'list-group-item-success': max[room].max - beds.length == 0}" data-ng-repeat="(room, beds) in rooms">
+              <div class="row">
+                <div class="col-sm-2">
+                  <span class="room">{{ room }}</span>
+                  <span data-ng-show="max[room].max - beds.length > 0">
+                    {{ max[room].max - beds.length}} left
+                  </span>
+                  <span data-ng-show="max[room].max - beds.length == 0">
+                    (Full)
+                  </span>
+                </div>
+                <div class="col-sm-2">
+                      <div class="btn-group disabled" role="group">
+                        <a class="btn btn-xs btn-default disabled" data-ng-class="{'btn-primary': beds.length < max[room].max && selected._id, 'disabled': beds.length >= max[room].max || !selected._id}" data-ng-click="applyToDuration({room:room})">
+                          All days
+                        </a>
+                        <a class="btn btn-xs btn-default disabled" data-ng-class="{'btn-info': beds.length < max[room].max && selected._id, 'disabled': beds.length >= max[room].max || !selected._id}" data-ng-click="addToBed({date:date,room:room})">This day</a> 
+                      </div>
+                </div>
+                <div class="col-sm-8 people">
+                  <ol class="list-inline">
+                    <li data-ng-show="beds.length === 0">-</li>
+                    <li data-ng-repeat="person in beds">
+                      <button class="btn btn-danger btn-xs" data-ng-click="removeBedAssignment({date:date,room:room,index:$index})" title="Click to delete">
+                        <span ng-show="person.status != 'guest'">
+                          {{ person.name }}
+                        </span>
+                        <span ng-show="person.status == 'guest'">
+                          {{ person.name }}, guest of {{ person.member.name }}
+                        </span>
+                      </button>
                     </li>
                   </ol>
-                </td>              
-              </tr>
-            </tbody>
-          </table>
+                </div><!-- col-sm-8 -->
+              </div><!-- row -->
+            </li>
+          </ul>
+        </div><!-- panel -->
+      </section><!-- day -->
+
+      <div class="form-group">
+        <p>
+          Are these assignments ready to be published to the public sign up page?
+        </p>
+        <div class="btn-group">
+          <label class="btn btn-default" ng-model="signup.published" uib-btn-radio="true" uncheckable>Published</label>
+          <label class="btn btn-default" ng-model="signup.published" uib-btn-radio="false" uncheckable>Hidden</label>
         </div>
       </div>
-    </div>
 
-    <div class="form-group">
-      <p>
-        Are these assignments ready to be published to the public sign up page?
-      </p>
-      <div class="btn-group">
-        <label class="btn btn-default" ng-model="signup.published" uib-btn-radio="true" uncheckable>Published</label>
-        <label class="btn btn-default" ng-model="signup.published" uib-btn-radio="false" uncheckable>Hidden</label>
-      </div>
-    </div>
+      <form role="form" id="update-signup" data-ng-submit="updateSignup()">
+        <input type="hidden" data-ng-model="signup" value="{{ signup }}" />
+        <button class="btn btn-primary">Save</button>
+      </form>
 
-    <form role="form" id="update-signup" data-ng-submit="updateSignup()">
-      <input type="hidden" data-ng-model="signup" value="{{ signup }}" />
-      <button class="btn btn-primary btn-block btn-lg">Save</button>
-    </form>
+    </div><!-- col -->
+  </div>
+
+
   </div>
 </div>
-
 
 
 <!--
