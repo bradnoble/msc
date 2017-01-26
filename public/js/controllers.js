@@ -236,10 +236,7 @@ app.controller('signup', function ($scope, $cookies, $location, $rootScope, $rou
       $scope.signup.cancelled = [];
     }
     // add person to cancelled
-    angular.forEach($scope.signup.cancelled, function(value, key){
-      value._id
-      $scope.signup.cancelled.push(person);
-    });
+    $scope.signup.cancelled.push(person);      
     // remove person from list
     angular.forEach($scope.signup.list, function(value, key){
       // if value._id == person._id, splice it
@@ -285,15 +282,6 @@ app.controller('signup', function ($scope, $cookies, $location, $rootScope, $rou
       }
     });
     // console.log($scope.assigned);
-  };
-
-  $scope.filterList = function(){
-    console.log('hi');
-    if($scope.listFilter){
-      $scope.listFilter = '';
-    } else {
-      $scope.listFilter = "btn-link";
-    }
   };
 
   $scope.applyToDuration = function(obj){
@@ -408,6 +396,15 @@ app.controller('memberCtrl', function ($scope, $rootScope, $location, simpleFact
             here = true;
           }
         });
+
+        // is this person already cancelled?
+        // if so, remove them from the cancelled list
+        angular.forEach($scope.signup.cancelled, function(value, key){
+          if(value._id == obj._id){
+            $scope.signup.cancelled.splice(key, 1);
+          }
+        });
+
         if(!here){
           $scope.signup[$scope.type].push(obj);
         }
@@ -431,7 +428,7 @@ app.controller('memberCtrl', function ($scope, $rootScope, $location, simpleFact
             if(value._id == $scope.filtered[0]._id){
               here = true;
             }
-          });
+          });          
           if(!here){
             $scope.signup[$scope.type].push($scope.filtered[0]);        
           }
