@@ -75,7 +75,7 @@
                   <ol class="list-inline">
                     <li data-ng-show="beds.length === 0">-</li>
                     <li data-ng-repeat="person in beds">
-                      <button class="btn btn-danger btn-xs" data-ng-click="removeBedAssignment({date:date,room:room,index:$index})" title="Click to delete">
+                      <button class="btn btn-xs" data-ng-click="removeBedAssignment({date:date,room:room,index:$index})" data-ng-class="{'btn-danger': !selected._id, 'disabled': selected._id}" title="Click to delete">
                         <span ng-show="person.status != 'guest'">
                           {{ person.name }}
                         </span>

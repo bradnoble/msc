@@ -318,8 +318,11 @@ app.controller('signup', function ($scope, $cookies, $location, $rootScope, $rou
   };
 
   $scope.removeBedAssignment = function(obj){
-    $scope.signup.assignments[obj.date][obj.room].splice(obj.index, 1);
-    $scope.updateSignupList();
+    // only allow people to be deleted if a member is not being assigned
+    if(!$scope.selected._id){ 
+      $scope.signup.assignments[obj.date][obj.room].splice(obj.index, 1);
+      $scope.updateSignupList();
+    }
   };
 
   $scope.updateAssignments = function(){
