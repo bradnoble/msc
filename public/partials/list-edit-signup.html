@@ -14,7 +14,7 @@
         Manage list ({{ signup.list.length }})
       </a>
     </li>
-    <li role="presentation" data-ng-class="{'active': view == 'cancelled'}">
+    <li role="presentation" data-ng-show="signup.cancelled.length > 0" data-ng-class="{'active': view == 'cancelled'}">
       <a data-ng-click="toggleView('cancelled')" role="tab" data-toggle="tab">
         View cancellations ({{ signup.cancelled.length }})
       </a>
