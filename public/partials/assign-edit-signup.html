@@ -39,7 +39,7 @@
 
     <div class="col-sm-9">
       <h2>
-        Bed assignments
+        Bed assignments <button class="btn btn-xs" data-ng-class="{'btn-danger': !selected._id, 'disabled': selected._id}" data-ng-click="clearAssignments()">X Clear assignments</button>
       </h2>
       <p>
         <strong>Step 2</strong>: Assign to beds 
@@ -76,7 +76,7 @@
                     <li data-ng-show="beds.length === 0">-</li>
                     <li data-ng-repeat="person in beds">
                       <button class="btn btn-xs" data-ng-click="removeBedAssignment({date:date,room:room,index:$index})" data-ng-class="{'btn-danger': !selected._id, 'disabled': selected._id}" title="Click to delete">
-                        <span ng-show="person.status != 'guest'">
+                        x <span ng-show="person.status != 'guest'">
                           {{ person.name }}
                         </span>
                         <span ng-show="person.status == 'guest'">

@@ -325,6 +325,20 @@ app.controller('signup', function ($scope, $cookies, $location, $rootScope, $rou
     }
   };
 
+  $scope.clearAssignments = function(){
+    if(!$scope.selected._id){ 
+      angular.forEach($scope.signup.assignments, function(rooms, date){
+        angular.forEach(rooms, function(bed, room){
+          $scope.signup.assignments[date][room] = [];
+        });
+      });
+      //$scope.signup.assignments = {};
+      $scope.assigned = {};
+      $scope.selected = {};
+      $scope.updateAssignments();
+    }
+  };
+
   $scope.updateAssignments = function(){
     var dates = simpleFactory.getAllDays($scope.signup.arrive, $scope.signup.depart);
     // need to make sure the dates are in order
@@ -337,7 +351,11 @@ app.controller('signup', function ($scope, $cookies, $location, $rootScope, $rou
     
     // use the dates array to order the dates
     angular.forEach(array, function(value, key){
-      obj[value] = $scope.signup.assignments[value];
+      if($scope.signup.assignments[value]){
+        obj[value] = $scope.signup.assignments[value];
+      } else {
+        obj[value] = beds;
+      }
     });
     $scope.signup.assignments = obj;
   };
