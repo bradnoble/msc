@@ -23,7 +23,7 @@
         <strong>Step 1</strong>: Pick a name
       </p>
       <div class="list-group">
-        <button type="button" class="list-group-item" data-ng-repeat="person in signup.list" data-ng-class="{ active: person._id == selected._id, 'disabled': assigned[person._id] }" data-ng-click="select(person)">
+        <button type="button" class="list-group-item" data-ng-repeat="person in signup.list" data-ng-class="{ active: person._id == selected._id, 'default': assigned[person._id], 'list-group-item-info': !assigned[person._id] }" data-ng-click="select(person)">
           <span ng-show="person.status != 'guest'">
             <strong>{{ person.name }}</strong> {{ person.gender }} <span data-ng-show="person.status != 'active'">({{ person.status }})</span>
           </span>
@@ -68,7 +68,7 @@
                         <a class="btn btn-xs btn-default disabled" data-ng-class="{'btn-primary': beds.length < max[room].max && selected._id, 'disabled': beds.length >= max[room].max || !selected._id}" data-ng-click="applyToDuration({room:room})">
                           All days
                         </a>
-                        <a class="btn btn-xs btn-default disabled" data-ng-class="{'btn-info': beds.length < max[room].max && selected._id, 'disabled': beds.length >= max[room].max || !selected._id}" data-ng-click="addToBed({date:date,room:room})">This day</a> 
+                        <a class="btn btn-xs btn-default disabled" data-ng-class="{'btn-default': beds.length < max[room].max && selected._id, 'disabled': beds.length >= max[room].max || !selected._id}" data-ng-click="addToBed({date:date,room:room})">This day</a> 
                       </div>
                 </div>
                 <div class="col-sm-8 people">
