@@ -312,7 +312,7 @@ app.controller('signup', function ($scope, $cookies, $location, $rootScope, $rou
     });
     if(!here){
       $scope.signup.assignments[obj.date][obj.room].push(person);
-      console.log($scope.signup.assignments[obj.date][obj.room]);
+      // console.log($scope.signup.assignments[obj.date][obj.room]);
     }
     $scope.updateSignupList();
   };
@@ -324,39 +324,20 @@ app.controller('signup', function ($scope, $cookies, $location, $rootScope, $rou
 
   $scope.updateAssignments = function(){
     var dates = simpleFactory.getAllDays($scope.signup.arrive, $scope.signup.depart);
+    // need to make sure the dates are in order
+    var array = Object.keys(dates);
+    var obj = {};
+
     if(!$scope.signup.assignments){
       $scope.signup.assignments = {};
     }
-/*
-    angular.forEach($scope.signup.assignments, function(room, date){
-      // if date already exists, don't create a new one
-      if(!dates[date]){
-        delete $scope.signup.assignments[date];
-      }
-      //$scope.signup.assignments[date] = beds;
+    
+    // use the dates array to order the dates
+    angular.forEach(array, function(value, key){
+      obj[value] = $scope.signup.assignments[value];
     });
-*/
-    angular.forEach(dates, function(room, date){
-      if(!$scope.signup.assignments[date]){
-        $scope.signup.assignments[date] = beds;
-      }
-    });
+    $scope.signup.assignments = obj;
   };
-
-/*
-	$scope.$watch('signup["arrive"]', function(newVal, oldVal){
-      console.log('arrive');
-		if(newVal !== oldVal){
-			$scope.updateAssignments();
-		}
-	});
-	$scope.$watch('signup["depart"]', function(newVal, oldVal){
-      console.log('depart');
-		if(newVal !== oldVal){
-			$scope.updateAssignments();
-		}
-	});
-*/
 
   // save edits to signup
   $scope.updateSignup = function(type) {
