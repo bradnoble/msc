@@ -180,6 +180,9 @@ app.controller('signup', function ($scope, $cookies, $location, $rootScope, $rou
   $scope.max = simpleFactory.getRoomSchema();
   $scope.selected = {};
   $scope.assigned = {};
+  $scope.guestStarter = []; // val from guest field in edit list
+  $scope.view = 'list'; // default tab/tab-container view for edit list
+  $scope.type = 'list'; // to reinstate people
 
   // get all the people for the typeaheads
   simpleFactory.getPeople()
@@ -247,20 +250,18 @@ app.controller('signup', function ($scope, $cookies, $location, $rootScope, $rou
     // save
   };
 
-  $scope.startGuest = function(){
-    $scope.signup.guest = {};
-    $scope.signup.guest.name = $scope.guestStarter;
+  $scope.toggleView = function(str){
+    $scope.view = str;
   };
 
-  $scope.addGuest = function(person){
+  $scope.addGuest = function(index, person){
     var guest = simpleFactory.docDefaults('guest');
-    guest.name = $scope.signup.guest.name;
+    guest.name = $scope.guestStarter[index];
     guest.status = 'guest'; // this is not the same as type
     guest.member = person;
-    console.log(guest);
-    $scope.signup.list.push(guest);
-    delete $scope.signup.guest;
-    delete $scope.guestStarter;
+    // insert into list below sponsor member, and bump things down
+    $scope.signup.list.splice(index + 1, 0, guest); 
+    $scope.guestStarter = [];
   };
   
   $scope.select = function(person){
@@ -388,6 +389,7 @@ app.controller('memberCtrl', function ($scope, $rootScope, $location, simpleFact
     
     // when a user clicks to pick a member
     $scope.assign = function(obj){
+
       var here = false;
       if(angular.isArray($scope.signup[$scope.type])){
         // is this person already in here?
