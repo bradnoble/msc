@@ -20,12 +20,12 @@
       -->
 
       <p>
-        <strong>Step 1</strong>: Pick a name
+        <strong>Step 1</strong>: Pick a person to assign 
       </p>
       <div class="list-group">
-        <button type="button" class="list-group-item" data-ng-repeat="person in signup.list" data-ng-class="{ active: person._id == selected._id, 'default': assigned[person._id], 'list-group-item-info': !assigned[person._id] }" data-ng-click="select(person)">
+        <button type="button" class="list-group-item" data-ng-repeat="person in signup.list" data-ng-class="{ active: person._id == selected._id, 'strikethrough': assigned[person._id], 'list-group-item-info': !assigned[person._id] }" data-ng-click="select(person)">
           <span ng-show="person.status != 'guest'">
-            <strong>{{ person.name }}</strong> {{ person.gender }} <span data-ng-show="person.status != 'active'">({{ person.status }})</span>
+            {{ person.name }} {{ person.gender }} <span data-ng-show="person.status != 'active'">({{ person.status }})</span>
           </span>
           <span ng-show="person.status == 'guest'">
             {{ person.name }}, guest of {{ person.member.name }}
@@ -42,7 +42,7 @@
         Bed assignments <button class="btn btn-xs" data-ng-class="{'btn-danger': !selected._id, 'disabled': selected._id}" data-ng-click="clearAssignments()">X Clear assignments</button>
       </h2>
       <p>
-        <strong>Step 2</strong>: Assign to beds 
+        <strong>Step 2</strong>: Assign that person to a bed 
         <!-- <button class="btn btn-xs" data-ng-class="{'disabled': assigned == {}, 'btn-danger': assigned != {}}">Clear assignments</button>-->
       </p>
 
