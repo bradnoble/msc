@@ -1,5 +1,5 @@
-# msc
-App to manage a membership list and bed assignments for the Montclair Ski Club.
+# Montclair Ski Club (MSC)
+App to manage the membership list for the Montclair Ski Club, and room availability at the lodge at Mad River Glen. 
 
 Ingredients:
 
