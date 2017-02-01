@@ -273,14 +273,20 @@ app.controller('signup', function ($scope, $cookies, $location, $rootScope, $rou
 
 // flag people in the list who are already assigned
   $scope.updateSignupList = function(){
+
+      angular.forEach($scope.signup.assignments, function(rooms, date){
+        angular.forEach(rooms, function(beds, room){
+          angular.forEach(beds, function(person, key){
+              $scope.assigned[person] = true;
+          });
+        });
+      });
+    
     var flatten = JSON.stringify($scope.signup.assignments);
     angular.forEach($scope.signup.list, function(value, key){
       if(flatten.indexOf(value._id) > -1){
         $scope.assigned[value._id] = true;
       } 
-      else {
-        delete $scope.assigned[value._id];
-      }
     });
     // console.log($scope.assigned);
   };
