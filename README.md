@@ -1,9 +1,13 @@
 # msc
 App to manage a membership list and bed assignments for the Montclair Ski Club.
 
- - Angular front end
- - Node runtime and middleware on IBM Bluemix (Cloud Foundry)
- - Cloudant backend
+Ingredients:
+
+ - AngularJS for the front end
+ - NodeJS for the runtime and middleware, on IBM Bluemix (Cloud Foundry)
+ - IBM Cloudant (CouchDB) for the database
+
+Node packages (via npm):
 
 ```
 "dependencies": {
