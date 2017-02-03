@@ -504,8 +504,12 @@ app.controller('CookieCtrl', function ($scope, $cookies) {
     return cookie;
   };
   $scope.putCookie = function(){
-    $cookies.put('msc-signup', $scope.cookie);    
-    $scope.addAlert("Hey, " + $scope.signup.chair.name + ". You're the sign up chair.");
+    console.log($scope.cookie);
+    console.log($scope.signup.chair);
+    if($scope.cookie == $scope.signup.chair._id){
+      $cookies.put('msc-signup', $scope.cookie);    
+      $scope.addAlert("Hey, " + $scope.signup.chair.name + ". You're the sign up chair.");
+    }
   }
 });
 
