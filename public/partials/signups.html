@@ -12,31 +12,35 @@
 
 			<div class="row">
 
-						<div class="col-md-3">
-                <strong><a href="#/signups/{{ signup._id }}"><span class="date">{{ signup.arrive | date:'EEE, MMM d' }}</span><span class="hyphen"> - </span><span class="date">{{ signup.depart | date:'d' }}</span></a></strong> 
-								<!-- <a href="#/signups/edit/{{ signup._id }}">edit</a> -->
-						</div>
+				<div class="col-sm-4">
+					<h4>
+						<a href="#/signups/{{ signup._id }}">
+							<span ng-show="signup.name">{{ signup.name }} | </span>
+							<span class="date">{{ signup.arrive | date:'EEE, MMM d' }}</span><span class="hyphen"> - </span><span class="date">{{ signup.depart | date:'d' }}</span>
+						</a>
+					</h4> 
+					<!-- <a href="#/signups/edit/{{ signup._id }}">edit</a> -->
+				</div>
 
-						<div class="col-md-3">
-              <div ng-show="signup.name">
-                {{ signup.name }}
-              </div>
-            </div>
-
-						<div class="col-md-4">
-					    <div data-ng-show="signup.chair.name">
-                Signup chair: <a href="#/list/{{signup.chair.household_id}}">{{ signup.chair.name }}</a>
-              </div>
-					    <div data-ng-show="signup.mgr.name">
-                Lodge manager: <a href="#/list/{{signup.mgr.household_id}}">{{ signup.mgr.name }}</a>
-              </div>
-						</div>
-
-            <div class="col-md-2">
-                {{ signup.list.length }} signed up 
-								<!-- <a href="#/signups/edit/list/{{ signup._id }}">edit</a> -->
-            </div>
+				<div class="col-sm-4">
+					<div data-ng-show="signup.chair.name">
+						Signups: <a href="#/list/{{signup.chair.household_id}}">{{ signup.chair.name }}</a>
 					</div>
+					<div data-ng-show="signup.mgr.name">
+						Lodge mgr: <a href="#/list/{{signup.mgr.household_id}}">{{ signup.mgr.name }}</a>
+					</div>
+				</div>
+
+				<div class="col-sm-4">
+					{{ signup.list.length }} signed up 
+					<!-- <a href="#/signups/edit/list/{{ signup._id }}">edit</a> -->
+					<div class="progress">
+						<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{ signup.list.length/40 * 100 }}%">
+							<span>{{ 40-signup.list.length}} beds left</span>
+						</div>
+					</div>
+				</div>
+			</div><!--row-->
 
 		</li>
 	</ul>

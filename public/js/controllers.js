@@ -142,7 +142,7 @@ app.controller('household', function ($scope, $routeParams, $timeout, $location,
 
 });
 
-app.controller('signups', function ($scope, simpleFactory) {
+app.controller('signups', function ($scope, $cookies, $location, simpleFactory) {
 
 	$scope.signups = [];
 
@@ -159,6 +159,15 @@ app.controller('signups', function ($scope, simpleFactory) {
       // probably an auth error
 			$scope.signups = data;
 		});
+
+      // set cookie & redirect to signup
+      $scope.putCookie = function(obj){
+        $cookies.put('msc-signup', obj.chair._id);    
+        $scope.addAlert("Hey, " + obj.chair.name + ". You're the sign up chair.");
+        // redirect to the signup with edit buttons
+        $location.path('/signups/' + obj._id);
+      }
+      
 });
 
 app.controller('getSignup', function ($scope, $location, $rootScope, $routeParams, $http, simpleFactory) {

@@ -35,6 +35,11 @@ app.config( function($routeProvider) {
 				controller: 'signups',
 				templateUrl: 'partials/signups.html'
 			})
+		.when('/signups/chairs',
+			{
+				controller: 'signups',
+				templateUrl: 'partials/chairs.html'
+			})
 		.when('/signups/new',
 			{
 				controller: 'signup',

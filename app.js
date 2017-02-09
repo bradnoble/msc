@@ -255,6 +255,23 @@ app.get('/getSignups',
     }
 });
 
+app.get('/getSignupChairs', 
+  users.auth,
+  function(req, res){
+    var role = req.user.role[0].value;
+    if(role === 'admin'){
+      // console.log(role);
+      db.view('app', 'signups', {'include_docs': true}, function(err, doc){
+        if (!err) {
+          res.send(doc);
+        }
+      });
+    } else {
+      // console.log('not admin');
+      return res.status(401).json({ "error": "Sorry, you don't have permission for this." }); 
+    }
+});
+
 app.get('/getSignup/', 
   users.auth,
   function(req, res){

@@ -1,0 +1,38 @@
+<h1>
+  Signup Override
+  <small>For admins, to override the signup chair</small>
+</h1>
+<div class="row">
+  <div data-ng-repeat="signup in signups" class="col-sm-4 event">
+    <div class="thumbnail">
+      <div class="caption">
+
+        <div class="row dates">
+          <div class="col-sm-6 date arrive">
+            {{ signup.arrive | date:'EEEE M/d' }}
+          </div>
+          <div class="col-sm-6 date depart">
+            {{ signup.depart | date:'EEEE M/d' }}
+          </div>
+        </div>
+
+        <h3 ng-show="signup.name" class="text-success">
+          {{ signup.name }}
+        </h3>
+
+        <h3 ng-show="!signup.name" class="text-success">
+          {{ signup.arrive | date:'M/d' }} - {{ signup.depart | date:'M/d' }} 
+        </h3>
+
+        <p class="beds">
+          <span>{{ signup.list.length}} signups</span>
+        </p>
+
+        <p>
+          <a class="btn btn-success" data-ng-click="putCookie(signup)">{{ signup.chair.name }}</a>
+        </p>
+
+      </div><!--caption-->
+    </div><!--thumbnail-->
+  </div>
+</div>
