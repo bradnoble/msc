@@ -75,7 +75,7 @@ app.factory('simpleFactory', function($http, $timeout, $location) {
         "max": 4
       },
       "bunny": {
-        "max": 5
+        "max": 6
       },
       "chipmunk": {
         "max": 4
